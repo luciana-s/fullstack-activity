@@ -15,6 +15,7 @@ mongoose
     console.log("Unable to connect to MongoDB Atlas!");
     console.error(error);
   });
+
 app.use(express.json());
 
 // we want calhost:3000 and localhost:4200 to communicate with each other, so we add headers
@@ -35,8 +36,8 @@ app.use((req, res, next) => {
 //* get all stuff
 app.use("/api/products", (req, res, next) => {
   Product.find()
-    .then((product) => {
-      res.status(200).json({ products: product });
+    .then((products) => {
+      res.status(200).json({ products: products });
     })
     .catch((error) => {
       res.status(400).json({
@@ -54,11 +55,12 @@ app.post("/api/products", (req, res, next) => {
     price: req.body.price,
     userId: req.body.userId,
   });
+  console.log(req);
+  console.log(product);
   product
     .save()
     .then(() => {
-      res.status(201).json({
-        product,
+      res.status(201).json({ product : product,
       });
     })
     .catch((error) => {
@@ -73,7 +75,7 @@ app.get("/api/products/:id", (req, res, next) => {
     _id: req.params.id,
   })
     .then((product) => {
-      res.status(200).json(product);
+      res.status(200).json({product : product});
     })
     .catch((error) => {
       res.status(404).json({
@@ -82,7 +84,7 @@ app.get("/api/products/:id", (req, res, next) => {
     });
 });
 
-app.put("/api/stuff/:id", (req, res, next) => {
+app.put("/api/product/:id", (req, res, next) => {
   const product = new Product({
     _id: req.params.id,
     title: req.body.title,
@@ -93,7 +95,21 @@ app.put("/api/stuff/:id", (req, res, next) => {
   });
   Product.updateOne({ _id: req.params.id }, product)
     .then(() => {
-      res.status(201).json({ product: Product });
+      res.status(201).json({ message: 'Modified!' });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
+    });
+});
+
+app.delete("/api/product/:id", (req, res, next) => {
+  Product.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(200).json({
+        message: "Deleted!",
+      });
     })
     .catch((error) => {
       res.status(400).json({
