@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 //* get all stuff
-app.use("/api/products", (req, res, next) => {
+app.get("/api/products", (req, res, next) => {
   Product.find()
     .then((products) => {
       res.status(200).json({ products: products });
@@ -55,13 +55,10 @@ app.post("/api/products", (req, res, next) => {
     price: req.body.price,
     userId: req.body.userId,
   });
-  console.log(req);
-  console.log(product);
   product
     .save()
     .then(() => {
-      res.status(201).json({ product : product,
-      });
+      res.status(201).json({ product: product });
     })
     .catch((error) => {
       res.status(400).json({
@@ -75,7 +72,7 @@ app.get("/api/products/:id", (req, res, next) => {
     _id: req.params.id,
   })
     .then((product) => {
-      res.status(200).json({product : product});
+      res.status(200).json({ product: product });
     })
     .catch((error) => {
       res.status(404).json({
@@ -95,7 +92,7 @@ app.put("/api/product/:id", (req, res, next) => {
   });
   Product.updateOne({ _id: req.params.id }, product)
     .then(() => {
-      res.status(201).json({ message: 'Modified!' });
+      res.status(201).json({ message: "Modified!" });
     })
     .catch((error) => {
       res.status(400).json({
