@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const Product = require("./models/product");
 
 // * connect to Mongo DB
 mongoose
@@ -14,9 +15,22 @@ mongoose
     console.log("Unable to connect to MongoDB Atlas!");
     console.error(error);
   });
+app.use(express.json());
 
+// we want calhost:3000 and localhost:4200 to communicate with each other, so we add headers
+// This will allow requests from all origins to access your API
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
 
-
-  
 // very important
 module.exports = app;
