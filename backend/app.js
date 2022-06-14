@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//* get all stuff
+//* get all products
 app.get("/api/products", (req, res, next) => {
   Product.find()
     .then((products) => {
@@ -49,11 +49,10 @@ app.get("/api/products", (req, res, next) => {
 // * save new objs from POST into db
 app.post("/api/products", (req, res, next) => {
   const product = new Product({
-    title: req.body.title,
     description: req.body.description,
-    imageUrl: req.body.imageUrl,
+    inStock: req.body.inStock,
+    name: req.body.name,
     price: req.body.price,
-    userId: req.body.userId,
   });
   product
     .save()
@@ -81,14 +80,13 @@ app.get("/api/products/:id", (req, res, next) => {
     });
 });
 
-app.put("/api/product/:id", (req, res, next) => {
+app.put("/api/products/:id", (req, res, next) => {
   const product = new Product({
     _id: req.params.id,
-    title: req.body.title,
     description: req.body.description,
-    imageUrl: req.body.imageUrl,
+    name: req.body.name,
     price: req.body.price,
-    userId: req.body.userId,
+    inStock: req.body.inStock,
   });
   Product.updateOne({ _id: req.params.id }, product)
     .then(() => {
@@ -101,7 +99,7 @@ app.put("/api/product/:id", (req, res, next) => {
     });
 });
 
-app.delete("/api/product/:id", (req, res, next) => {
+app.delete("/api/products/:id", (req, res, next) => {
   Product.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(200).json({
