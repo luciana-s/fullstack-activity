@@ -58,8 +58,42 @@ app.post("/api/products", (req, res, next) => {
     .save()
     .then(() => {
       res.status(201).json({
-        product
+        product,
       });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
+    });
+});
+
+app.get("/api/products/:id", (req, res, next) => {
+  Product.findOne({
+    _id: req.params.id,
+  })
+    .then((product) => {
+      res.status(200).json(product);
+    })
+    .catch((error) => {
+      res.status(404).json({
+        error: error,
+      });
+    });
+});
+
+app.put("/api/stuff/:id", (req, res, next) => {
+  const product = new Product({
+    _id: req.params.id,
+    title: req.body.title,
+    description: req.body.description,
+    imageUrl: req.body.imageUrl,
+    price: req.body.price,
+    userId: req.body.userId,
+  });
+  Product.updateOne({ _id: req.params.id }, product)
+    .then(() => {
+      res.status(201).json({ product: Product });
     })
     .catch((error) => {
       res.status(400).json({
